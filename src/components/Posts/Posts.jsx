@@ -1,50 +1,29 @@
 import { Component } from 'react';
 import { Container } from '../Container/Container';
 import { Post } from './Post/Post';
+import { fetchArticles } from '../../api/articlesApi';
 import * as SC from './Posts.styled';
-
-const POSTS = [
-  {
-    title: 'My best project1',
-    likes: 5,
-  },
-  {
-    title: 'My best project2',
-    likes: 100,
-  },
-  {
-    title: 'My best project3',
-    likes: 400,
-  },
-  {
-    title: 'My best project4',
-    likes: 150,
-  },
-  {
-    title: 'My best project5',
-    likes: 200,
-  },
-  {
-    title: 'My best project6',
-    likes: 1,
-  },
-];
+import { Loader } from '../Loader/Loader';
+import { ApiRequest } from '../ApiRequest';
 
 const POSTS_KEY = 'posts';
 
 export class Posts extends Component {
   state = {
-    posts: POSTS,
-    newTitle: '',
+    posts: [],
+    articles: [],
+    loading: false,
+    error: null,
+    query: '',
     hasPostError: false,
     x: 0,
     y: 0,
   };
 
-  handleTitleChange = (event) => {
+  handleQueryChange = (event) => {
     const { target } = event;
     this.setState({
-      newTitle: target.value,
+      query: target.value,
     });
   };
 
@@ -62,7 +41,7 @@ export class Posts extends Component {
     }));
   };
 
-  persistPosts = () => {
+  getPersistedPosts = () => {
     const persistedSerializedPosts = localStorage.getItem(POSTS_KEY);
     let persistedPosts;
 
@@ -72,44 +51,63 @@ export class Posts extends Component {
       persistedPosts = null;
     }
 
-    this.setState({
-      posts: persistedPosts ?? POSTS,
-    });
+    if (persistedPosts && persistedPosts.length > 0) {
+      this.setState({
+        posts: persistedPosts,
+      });
+    }
   };
 
-  handleMouseMove = (event) => {
-    const { clientX, clientY } = event;
-    this.setState({
-      x: clientX,
-      y: clientY,
-    });
-  };
+  async searchArticles() {
+    const { query } = this.state;
+    this.setState({ loading: true });
+
+    try {
+      const { data } = await fetchArticles(query);
+      this.setState({
+        articles: data.hits,
+        error: null,
+      });
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
 
   componentDidMount() {
-    this.persistPosts();
+    this.getPersistedPosts();
+    // query=query&page=2&filter=true
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('query');
+    if (query === '') {
+      this.searchArticles();
+    }
 
-    // document.addEventListener('mousemove', this.handleMouseMove);
+    this.setState({ query: params.get('query') });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { posts } = this.state;
+    const { posts, query } = this.state;
+
+    if (query !== prevState.query) {
+      const params = new URLSearchParams();
+      params.set('query', query);
+      window.history.replaceState(null, null, `?${params.toString()}`);
+      this.searchArticles();
+    }
 
     if (posts === prevState.posts) return;
 
     localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('mousemove', this.handleMouseMove);
-  }
-
   componentDidCatch(error) {
-    console.dir(error);
     this.setState({ hasPostError: true });
   }
 
   render() {
-    const { posts, newTitle, x, y, hasPostError } = this.state;
+    const { articles, query, x, y, hasPostError, loading, error } = this.state;
 
     if (hasPostError) {
       return <span>THere was an error</span>;
@@ -122,17 +120,34 @@ export class Posts extends Component {
           <SC.Form onSubmit={this.handlePostCreation}>
             <input
               type="text"
-              value={newTitle}
-              onChange={this.handleTitleChange}
+              value={query}
+              onChange={this.handleQueryChange}
             />
             <button>Add</button>
           </SC.Form>
 
+          {loading && <Loader />}
+          {error && <>There was an error</>}
           <SC.Posts>
-            {posts.map(({ title, likes }) => (
-              <Post likes={likes} title={title} key={title} />
+            {articles.map(({ title, points, objectID }) => (
+              <Post key={objectID} likes={points} title={title} />
             ))}
           </SC.Posts>
+          {/* <ApiRequest request={() => fetchArticles(query)}>
+            {({ data, loading, error }) => {
+              if (loading) {
+                return <Loader />;
+              }
+
+              if (error) {
+                return <>There was an error</>;
+              }
+
+              return data?.hits?.map(({ title, points, objectID }) => (
+                <Post key={objectID} likes={points} title={title} />
+              ));
+            }}
+          </ApiRequest> */}
         </Container>
       </div>
     );
