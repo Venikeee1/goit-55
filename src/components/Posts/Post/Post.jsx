@@ -1,14 +1,14 @@
 import { Likes } from './Likes/Likes';
 import PropTypes from 'prop-types';
 import { Heading } from '../../Heading/Heading';
+import FALLBACK_THUMB from '../../../assets/screen.avif';
 import * as SC from './Post.styled';
-
-const FALLBACK_THUMB = 'https://mxb.dev/assets/images/featured/screen.avif';
 
 export const Post = ({ title, likes = 0, thumbSrc = FALLBACK_THUMB }) => {
   return (
     <SC.Card>
       <SC.Thumbs src={thumbSrc} alt="" />
+      {/* <SC.Thumbs src="/images/screen.avif" alt="" /> */}
       <SC.Container>
         <Heading level={2}>{title}</Heading>
         <SC.Likes>
