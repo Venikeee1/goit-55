@@ -3,6 +3,10 @@
   text-decoration: none;
 }
 
+.link:global(.active) {
+  color: red;
+}
+
 .number {
   font-weight: 600;
 }

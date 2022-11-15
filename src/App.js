@@ -1,24 +1,20 @@
-import { Header } from './components/Header/Header';
-import { Hero } from './components/Hero/Hero';
-import { Posts } from './components/Posts/Posts';
-import { Footer } from './components/Footer/Footer';
-import { Pagination } from './components/Pagination/Pagination';
+import { Routes, Route } from 'react-router-dom';
+import Homepage from './pages/Home/Home';
+import PostPage from './pages/Post/Post';
+import MainLayout from './Layouts/MainLayout';
 import './App.css';
-import { Container } from './components/Container/Container';
 
 const App = () => {
   return (
-    <div className="App">
-      <div className="content">
-        <Header />
-        <Hero />
-        <Container>
-          <Pagination />
-        </Container>
-        <Posts />
-      </div>
-      <Footer />
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/posts/:id" element={<PostPage />} />
+          <Route path="*" element={<>Error page</>} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Container } from '../Container/Container';
 import { Post } from './Post/Post';
 import { fetchArticles } from '../../api/articlesApi';
@@ -10,10 +11,9 @@ import { Pagination } from '../Pagination/Pagination';
 import { usePaginationContext } from '../../context/pagination';
 
 export const Posts = () => {
-  const params = new URLSearchParams(window.location.search);
-  const [query, setQuery] = useState(params.get('query'));
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('query') ?? '');
   const { page, setPage, setTotalPages } = usePaginationContext();
-  // const [counter, setCounter] = useState(0);
 
   const {
     data: articles,
@@ -30,9 +30,7 @@ export const Posts = () => {
   }, []);
 
   useWatch(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('query', query);
-    window.history.replaceState(null, null, `?${params.toString()}`);
+    setSearchParams({ query });
     setPage(1);
   }, [query]);
 
@@ -49,16 +47,12 @@ export const Posts = () => {
           <input type="text" value={query} onChange={handleQueryChange} />
           <button>Add</button>
         </SC.Form>
-        {/* <button onClick={() => setCounter((prevState) => prevState + 1)}>
-          Counter + 1
-        </button>
-        <h2>{counter}</h2> */}
 
         {isLoading && <Loader />}
         {error && <>There was an error</>}
         <SC.Posts>
-          {articles?.hits?.map(({ title, points, objectID }) => (
-            <Post key={objectID} likes={points} title={title} />
+          {articles?.hits?.map(({ title = '', points, objectID }) => (
+            <Post key={objectID} id={objectID} likes={points} title={title} />
           ))}
         </SC.Posts>
         <Pagination />
@@ -66,9 +60,3 @@ export const Posts = () => {
     </div>
   );
 };
-
-// const add = () => {};
-
-// add(2)(1)(); // 3
-// add(3)(2)(1)(); // 6
-// add(3)(2)(1)(5)(); // 11
