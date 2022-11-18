@@ -3,8 +3,8 @@ import { Likes } from './Likes/Likes';
 import PropTypes from 'prop-types';
 import { Heading } from '../../Heading/Heading';
 import FALLBACK_THUMB from '../../../assets/screen.avif';
-import { Link } from 'react-router-dom';
 import * as SC from './Post.styled';
+import { LinkWithPrevPageState } from '../../LinkWithPrevPageState/LinkWithPrevPageState';
 
 export const Post = memo(
   ({ title, likes = 0, thumbSrc = FALLBACK_THUMB, id }) => {
@@ -16,7 +16,9 @@ export const Post = memo(
           <Heading level={2}>{title}</Heading>
           <SC.Likes>
             <Likes amount={likes} />
-            <Link to={`/posts/${id}`}>View post</Link>
+            <LinkWithPrevPageState to={`/posts/${id}`}>
+              View post
+            </LinkWithPrevPageState>
           </SC.Likes>
         </SC.Container>
       </SC.Card>
