@@ -24,7 +24,6 @@ export class ApiRequest extends Component {
 
   render() {
     const { data, error, loading } = this.state;
-    console.log(typeof this.props.children === 'function');
     if (typeof this.props.children === 'function') {
       return this.props.children({ data: data?.data, error, loading });
     }

@@ -17,7 +17,6 @@ export const useWatch = (fn, deps) => {
 
   useEffect(() => {
     if (!isMounted) return;
-    console.log('updated');
 
     fn();
   }, deps);
