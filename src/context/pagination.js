@@ -3,10 +3,13 @@ import { createContext, useContext, useState, useMemo } from 'react';
 const PaginationContext = createContext(0);
 
 export const PaginationProvider = ({ children }) => {
+  const [user, setUser] = useState({});
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
   const providerValue = useMemo(() => {
     return {
+      user,
       page,
       totalPages,
       setPage,
@@ -22,8 +25,8 @@ export const PaginationProvider = ({ children }) => {
 };
 
 export const usePaginationContext = () => {
-  const { page, setPage, totalPages, setTotalPages } =
+  const { page, setPage, totalPages, setTotalPages, user } =
     useContext(PaginationContext);
 
-  return { page, setPage, totalPages, setTotalPages };
+  return { page, setPage, totalPages, setTotalPages, user };
 };
