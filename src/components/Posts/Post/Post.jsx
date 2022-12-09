@@ -32,7 +32,7 @@ export const Post = memo(
 
 Post.propTypes = {
   likes: PropTypes.number,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   thumbSrc: PropTypes.string,
   isLiked: PropTypes.bool,
   onLike: PropTypes.func,

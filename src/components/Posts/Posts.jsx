@@ -10,8 +10,11 @@ import { useFetch } from '../../hooks/useFetch';
 import { Pagination } from '../Pagination/Pagination';
 import { usePaginationContext } from '../../context/pagination';
 import { useDispatch, useSelector } from 'react-redux';
-import { addLikedPost, removeLikedPost } from '../../redux/actions';
-import { getLikedPosts } from '../../redux/selectors';
+import {
+  addPost,
+  getLikedPosts,
+  removePost,
+} from '../../redux/likedPosts/slice';
 
 export const Posts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,7 +43,7 @@ export const Posts = () => {
     const isLiked = likedIdsSet.has(id);
 
     if (isLiked) {
-      dispatch(removeLikedPost(id));
+      dispatch(removePost(id));
     } else {
       const likedPost = articles.hits.find((post) => post.objectID === id);
       dispatch(
@@ -51,7 +54,7 @@ export const Posts = () => {
         //     title: likedPost.title,
         //   },
         // }
-        addLikedPost({
+        addPost({
           id: likedPost.objectID,
           title: likedPost.title,
         })

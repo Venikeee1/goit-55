@@ -3,7 +3,7 @@ import { HeaderNav } from './HeaderNav/HeaderNav';
 import { Container } from '../Container/Container';
 import styles from './Header.module.css';
 import { useSelector } from 'react-redux';
-import { getLikedPosts } from '../../redux/selectors';
+import { getLikedPosts } from '../../redux/likedPosts/slice';
 
 export const Header = () => {
   const isDesktop = window.innerWidth > 800;
