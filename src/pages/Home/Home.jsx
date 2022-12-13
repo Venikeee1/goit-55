@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Container } from '../../components/Container/Container';
 import { Hero } from '../../components/Hero/Hero';
 import { Pagination } from '../../components/Pagination/Pagination';
