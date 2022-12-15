@@ -9,3 +9,8 @@ export const fetchArticles = (query, page = 1) => {
 export const fetchArticleById = (id) => {
   return axios.get(`${BASE_URL}/items/${id}`);
 };
+
+export const getLikedPostsDetails = (ids) => {
+  const promises = ids.map((id) => fetchArticleById(id));
+  return Promise.all(promises);
+};

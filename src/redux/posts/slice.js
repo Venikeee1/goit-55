@@ -1,9 +1,9 @@
 import { createSlice, createDraftSafeSelector } from '@reduxjs/toolkit';
+import { selectLikedPostsIds } from '../likedPosts/slice';
 import { fetchPosts } from './operations';
 
 const initialState = {
   items: [],
-  likedItems: [],
   nbPages: 1,
   loading: false,
   error: null,
@@ -13,16 +13,6 @@ const initialState = {
 const postsSlice = createSlice({
   name: 'likedPosts',
   initialState,
-  reducers: {
-    addPost(state, action) {
-      state.likedItems.unshift(action.payload);
-    },
-    removePost(state, action) {
-      state.likedItems = state.likedItems.filter(
-        (post) => post.id !== action.payload
-      );
-    },
-  },
   extraReducers: {
     [fetchPosts.pending](state, action) {
       state.loading = true;
@@ -46,22 +36,18 @@ const postsSlice = createSlice({
   },
 });
 
-export const { addPost, removePost } = postsSlice.actions;
 export default postsSlice.reducer;
 
-export const selectPosts = (state) => state.posts;
+export const selectPostsState = (state) => state.posts;
 
-export const getLikedPosts = createDraftSafeSelector(
-  selectPosts,
-  (state) => state.likedItems
+export const selectPosts = createDraftSafeSelector(
+  selectPostsState,
+  (state) => state.items
 );
 
-const obj = {
-  a: {
-    c: {
-      d: 54,
-    },
-  },
-};
-
-JSON.stringify();
+export const selectLikedPosts = createDraftSafeSelector(
+  [selectPosts, selectLikedPostsIds],
+  (posts, likedPostsIds) => {
+    return posts.filter((post) => likedPostsIds.includes(post.objectID));
+  }
+);

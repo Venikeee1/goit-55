@@ -1,31 +1,20 @@
 import { configureStore, createReducer } from '@reduxjs/toolkit';
 import { persistReducer, persistStore, PERSIST } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import likedPostsReducer from './posts/slice';
+import postsReducer from './posts/slice';
+import likedPosts from './likedPosts/slice';
 
 const persistConfig = {
   key: 'posts',
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, likedPostsReducer);
-
-const logger = (store) => (next) => (action) => {
-  console.log(action.type);
-  next(action);
-};
-// те саме
-// const logger = (store) => {
-//   return (next) => {
-//     return (action) => {
-
-//     }
-//   }
-// }
+const persistedReducer = persistReducer(persistConfig, likedPosts);
 
 export const store = configureStore({
   reducer: {
-    posts: persistedReducer,
+    posts: postsReducer,
+    likedPosts: persistedReducer,
   },
   middleware(getDefaultMiddleware) {
     const defaultMiddleware = getDefaultMiddleware({
@@ -34,7 +23,7 @@ export const store = configureStore({
       },
     });
 
-    return [...defaultMiddleware, logger];
+    return [...defaultMiddleware];
   },
 });
 

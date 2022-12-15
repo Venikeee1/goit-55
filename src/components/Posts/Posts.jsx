@@ -8,23 +8,31 @@ import { useWatch } from '../../hooks/useWatch';
 import { Pagination } from '../Pagination/Pagination';
 import { usePaginationContext } from '../../context/pagination';
 import { useDispatch, useSelector } from 'react-redux';
+import { selectPostsState, selectLikedPosts } from '../../redux/posts/slice';
+import { fetchPosts } from '../../redux/posts/operations';
+import { LikedPostsByPage } from './LikedPostsByPage/LikedPostsByPage';
 import {
   addPost,
-  getLikedPosts,
   removePost,
-  selectPosts,
-} from '../../redux/posts/slice';
-import { fetchPosts } from '../../redux/posts/operations';
+  selectLikedPostsIds,
+} from '../../redux/likedPosts/slice';
+import { getLikedPostsDetails } from '../../api/articlesApi';
 
 export const Posts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('query') ?? '');
   const { page, setPage, setTotalPages } = usePaginationContext();
   const dispatch = useDispatch();
-  const { error, loading, nbPages, items: posts } = useSelector(selectPosts);
-  const likedPosts = useSelector(getLikedPosts);
-  const likedIds = likedPosts.map((post) => post.id);
-  const likedIdsSet = new Set([...likedIds]);
+  const {
+    error,
+    loading,
+    nbPages,
+    items: posts,
+  } = useSelector(selectPostsState);
+
+  const likedPostsIds = useSelector(selectLikedPostsIds);
+  const likedPosts = useSelector(selectLikedPosts);
+  const likedIdsSet = new Set([...likedPostsIds]);
 
   const handleQueryChange = useCallback((event) => {
     const { target } = event;
@@ -39,12 +47,7 @@ export const Posts = () => {
     } else {
       const likedPost = posts.find((post) => post.objectID === id);
 
-      dispatch(
-        addPost({
-          id: likedPost.objectID,
-          title: likedPost.title,
-        })
-      );
+      dispatch(addPost(likedPost.objectID));
     }
   };
 
@@ -62,6 +65,10 @@ export const Posts = () => {
     dispatch(fetchPosts({ query, page }));
   }, [dispatch, query, page]);
 
+  useEffect(() => {
+    getLikedPostsDetails(likedPostsIds).then(console.log, '---posts');
+  }, [likedPostsIds]);
+
   return (
     <div>
       <Container>
@@ -72,6 +79,8 @@ export const Posts = () => {
 
         {loading && <Loader />}
         {error && <>There was an error</>}
+
+        <LikedPostsByPage items={likedPosts} />
         <SC.Posts>
           {posts.map(({ title = '', points, objectID }) => (
             <Post
@@ -89,3 +98,25 @@ export const Posts = () => {
     </div>
   );
 };
+
+let isSingletonCreated = false;
+let singleTonEntity = null;
+
+export const createUserSingleton = () => {
+  if (!isSingletonCreated) {
+    singleTonEntity = {
+      name: 'Alex',
+      age: 300,
+    };
+
+    isSingletonCreated = true;
+  }
+
+  return singleTonEntity;
+};
+
+createUserSingleton();
+createUserSingleton();
+createUserSingleton();
+createUserSingleton();
+createUserSingleton();
