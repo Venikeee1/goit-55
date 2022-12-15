@@ -16,3 +16,8 @@ export const fetchPosts = createAsyncThunk(
     return response.data;
   }
 );
+
+export const fetchLikedPosts = createAsyncThunk(
+  'posts/liked',
+  async (ids) => {}
+);
