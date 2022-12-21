@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { fetchArticleById } from '../../api/articlesApi';
 import { Container } from '../../components/Container/Container';
 import { useFetch } from '../../hooks/useFetch';
@@ -6,9 +6,8 @@ import FALLBACK_THUMB from '../../assets/screen.avif';
 import { BackButton } from '../../components/BackButton/BackButton';
 
 const PostPage = () => {
-  const { state } = useLocation();
   const { id } = useParams();
-  const { data, isLoading, error } = useFetch(
+  const { data, isLoading } = useFetch(
     () => fetchArticleById(id).then(({ data }) => data),
     [id]
   );

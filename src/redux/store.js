@@ -2,19 +2,30 @@ import { configureStore, createReducer } from '@reduxjs/toolkit';
 import { persistReducer, persistStore, PERSIST } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import postsReducer from './posts/slice';
-import likedPosts from './likedPosts/slice';
+import likedPostsReducer from './likedPosts/slice';
+import userReducer from './auth/slice';
 
-const persistConfig = {
+const likedPostsConfig = {
   key: 'posts',
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, likedPosts);
+const userConfig = {
+  key: 'user',
+  storage,
+};
+
+const persistedLikedPostsReducer = persistReducer(
+  likedPostsConfig,
+  likedPostsReducer
+);
+const persistedUserReducer = persistReducer(userConfig, userReducer);
 
 export const store = configureStore({
   reducer: {
     posts: postsReducer,
-    likedPosts: persistedReducer,
+    likedPosts: persistedLikedPostsReducer,
+    user: persistedUserReducer,
   },
   middleware(getDefaultMiddleware) {
     const defaultMiddleware = getDefaultMiddleware({

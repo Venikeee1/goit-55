@@ -65,9 +65,9 @@ export const Posts = () => {
     dispatch(fetchPosts({ query, page }));
   }, [dispatch, query, page]);
 
-  useEffect(() => {
-    getLikedPostsDetails(likedPostsIds).then(console.log, '---posts');
-  }, [likedPostsIds]);
+  // useEffect(() => {
+  //   getLikedPostsDetails(likedPostsIds).then(console.log, '---posts');
+  // }, [likedPostsIds]);
 
   return (
     <div>

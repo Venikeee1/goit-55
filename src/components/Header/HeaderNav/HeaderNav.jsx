@@ -11,6 +11,10 @@ const NAV_LINKS = [
     href: '/posts',
     label: 'Posts',
   },
+  {
+    href: '/login',
+    label: 'Login',
+  },
 ];
 
 export const HeaderNav = ({ isDesktop = true }) => {
