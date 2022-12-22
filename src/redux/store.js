@@ -13,6 +13,7 @@ const likedPostsConfig = {
 const userConfig = {
   key: 'user',
   storage,
+  whitelist: ['token'],
 };
 
 const persistedLikedPostsReducer = persistReducer(

@@ -10,10 +10,18 @@ export const register = (credentials) => {
   return axios.post(`${BASE_URL}/users/signup`, credentials);
 };
 
-export const refreshUser = () => {
-  return axios.get(`${BASE_URL}/users/me`);
+export const refresh = (token) => {
+  return axios.get(`${BASE_URL}/users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
-export const logout = () => {
-  return axios.post(`${BASE_URL}/users/logout`);
+export const logout = (token) => {
+  return axios.post(`${BASE_URL}/users/logout`, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

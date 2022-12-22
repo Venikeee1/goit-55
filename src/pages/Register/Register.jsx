@@ -1,11 +1,11 @@
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Container } from '../../components/Container/Container';
+import { FormContainer } from '../../components/Form/Form';
+import { Input } from '../../components/Input/Input';
 import { registerUser } from '../../redux/auth/operations';
 
 const Register = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -18,21 +18,18 @@ const Register = () => {
       password: password.value,
     };
 
-    dispatch(registerUser(credentials))
-      .unwrap()
-      .then(() => navigate('/', { replace: true }))
-      .catch((error) => {});
+    dispatch(registerUser(credentials));
   };
 
   return (
     <Container>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" autoComplete="off" />
-        <input type="text" name="email" autoComplete="off" />
-        <input type="password" name="password" autoComplete="off" />
+      <FormContainer onSubmit={handleSubmit}>
+        <h1>Register</h1>
+        <Input type="text" name="name" autoComplete="off" />
+        <Input type="text" name="email" autoComplete="off" />
+        <Input type="password" name="password" autoComplete="off" />
         <button type="submit">Register</button>
-      </form>
+      </FormContainer>
     </Container>
   );
 };

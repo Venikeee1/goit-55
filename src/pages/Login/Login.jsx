@@ -1,11 +1,12 @@
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Container } from '../../components/Container/Container';
+import { FormContainer, InputContainer } from '../../components/Form/Form';
+import { Input } from '../../components/Input/Input';
 import { loginUser } from '../../redux/auth/operations';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -17,21 +18,22 @@ const Login = () => {
       password: password.value,
     };
 
-    dispatch(loginUser(credentials))
-      .unwrap()
-      .then(() => navigate('/', { replace: true }))
-      .catch((error) => {});
+    dispatch(loginUser(credentials));
   };
 
   return (
     <Container>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="email" autoComplete="off" />
-        <input type="password" name="password" autoComplete="off" />
+      <FormContainer onSubmit={handleSubmit}>
+        <h1>Login</h1>
+        <InputContainer>
+          <Input type="text" name="email" autoComplete="off" />
+        </InputContainer>
+        <InputContainer>
+          <Input type="password" name="password" autoComplete="off" />
+        </InputContainer>
         <button type="submit">Login</button>
-      </form>
-      <Link to="/register">Register user</Link>
+        <Link to="/register">Register user</Link>
+      </FormContainer>
     </Container>
   );
 };
