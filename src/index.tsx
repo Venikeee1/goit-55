@@ -7,15 +7,19 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import './index.css';
-import './firebase';
+import { Label } from './Label';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <PaginationProvider>
+            <Label name="hello" description="dasdsa" />
             <App />
           </PaginationProvider>
         </BrowserRouter>
