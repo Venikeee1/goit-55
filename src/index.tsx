@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { persistor, store } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import './index.css';
+import './firebase';
 import { Label } from './Label';
 
 const root = ReactDOM.createRoot(
